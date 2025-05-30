@@ -1,4 +1,4 @@
-# app/main.py
+# app/streamlit_main.py
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -9,9 +9,14 @@ from ui.history import history_page
 
 load_dotenv()
 
+
 def main_page():
     st.set_page_config(page_title="에세이 생성·요약 평가 시스템")
     st.title(f"에세이 생성·요약 평가 시스템")
+
+    # Initialize history in session state if it doesn't exist
+    if "history" not in st.session_state:
+        st.session_state.history = []
 
     st.sidebar.markdown("## 📋 메뉴")
     if st.sidebar.button("에세이 생성 및 평가"):
@@ -20,7 +25,7 @@ def main_page():
         st.session_state["page"] = "summary_eval"
     if st.sidebar.button("이전 평가"):
         st.session_state["page"] = "history"
-    
+
     page = st.session_state.get("page", "generation_eval")
     if page == "generation_eval":
         generation_eval_page()
@@ -28,6 +33,7 @@ def main_page():
         summary_eval_page()
     elif page == "history":
         history_page()
+
 
 if __name__ == "__main__":
     main_page()
